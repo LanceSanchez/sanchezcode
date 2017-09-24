@@ -18,7 +18,7 @@ class Student:
 	@staticmethod
 	def createTable(tables):
 		sql.execute('''CREATE TABLE IF NOT EXISTS tables
-				   (idnum TEXT, course TEXT, fname TEXT, mname TEXT, lname TEXT)''')
+				   (idnum TEXT PRIMARY KEY, course TEXT NOT NULL, fname TEXT NOT NULL, mname TEXT NOT NULL, lname TEXT NOT NULL)''')
 
 		print "The table has been created"
 
@@ -31,7 +31,7 @@ class Student:
 
 	@staticmethod
 	def prints():
-		sql.execute('SELECT * FROM tables')
+		sql.execute('SELECT * FROM tables ORDER BY idnum ASC')
 		for row in sql.fetchall():
 			print row
 
@@ -42,7 +42,7 @@ class Student:
 		for row in sql.execute("SELECT * FROM tables where idnum = ?", (idnum1,)):
 			data = data+1
 		if data == 0:
-			print "id number not in database"
+			print "|id number not in database!!|"
 		else:
 			sql.execute("SELECT * FROM tables where idnum = ?", (idnum1,))
 			for row in sql.fetchall():
@@ -55,7 +55,7 @@ class Student:
 		for row in sql.execute("SELECT * FROM tables where idnum = ?", (del1,)):
 			data = data+1
 		if data == 0:
-			print "id number not in database"
+			print "|id number not in database!!|"
 		else:
 			sql.execute("DELETE from tables where idnum = ?", (del1,))
 			con.commit()
@@ -67,7 +67,7 @@ class Student:
 		for row in sql.execute("SELECT * FROM tables where idnum = ?", (idnum1,)):
 			data = data+1
 		if data == 0:
-			print "id number not in database"
+			print "|id number not in database!!|"
 		else:	
 			update3 = 1
 			while(update3 == 1):
@@ -100,45 +100,46 @@ class Student:
 					update3 = 0
 
 def main():
+	tables = "StudentData"
+	Student.createTable(tables)
 	loop = 1
 	while(loop == 1):
 		print "\n"
+		print "\t|Table: StudentData|"
+		print "\n"
 		print "What do you want to do?"
-		print "enter 1 for create table"
-		print "enter 2 for add"
-		print "enter 3 for view"
-		print "enter 4 search"
-		print "enter 5 for delete"
-		print "enter 6 for update"
+		print "enter 1 for add"
+		print "enter 2 for view"
+		print "enter 3 search"
+		print "enter 4 for delete"
+		print "enter 5 for update"
 		choice2 = input("Enter number shown above: ")
 		print "\n"
-
+			
 		if choice2 == 1:
-			tables = raw_input("Enter table name: ")
-			Student.createTable(tables)
-		elif choice2 == 2:
 			add1 = 1
 			while(add1 == 1):
+				
 				idnum1 = raw_input("Enter id number: ")
-				course = raw_input("Enter course: ")
-				fname = raw_input("Enter first name: ")
-				mname = raw_input("Enter middle name: ")
-				lname = raw_input("Enter last name: ")
-				sdata = Student(idnum1,course,fname,mname,lname)
-
 				data = 0
 				for row in sql.execute("SELECT * FROM tables where idnum = ?", (idnum1,)):
 					data = data+1
 				if data >= 1:
-					print "id number already in database"
-				else:
+					print "|Id number already in database!!|"
+				else:	
+					course = raw_input("Enter course: ")
+					fname = raw_input("Enter first name: ")
+					mname = raw_input("Enter middle name: ")
+					lname = raw_input("Enter last name: ")
+					sdata = Student(idnum1,course,fname,mname,lname)
+
 					Student.add(sdata)
 				
 				add2 = raw_input("Do you want to add more?(yes or no): ")
 				if add2 == "no" or add2 == "NO" or add2 == "No":
 					add1 = 0
 
-		elif choice2 == 3:
+		elif choice2 == 2:
 			prints1 = 1
 			while (prints1 == 1):
 				Student.prints()
@@ -146,7 +147,7 @@ def main():
 				if prints2 == "no" or prints2 == "NO" or prints2 == "No":
 					prints1 = 0
 
-		elif choice2 == 4:
+		elif choice2 == 3:
 			search1 = 1
 			while (search1 == 1): 
 				Student.search()
@@ -154,7 +155,7 @@ def main():
 				if search2 == "no" or search2 == "NO" or search2 == "No":
 					search1 = 0
 
-		elif choice2 == 5:
+		elif choice2 == 4:
 			delete1 = 1
 			while (delete1 == 1):
 				Student.delete()
@@ -162,7 +163,7 @@ def main():
 				if delete2 == "no" or delete2 == "NO" or delete2 == "No":
 					delete1 = 0
 
-		elif choice2 == 6:
+		elif choice2 == 5:
 			update1 = 1
 			while (update1 == 1):
 				
